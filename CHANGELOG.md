@@ -1,6 +1,7 @@
-﻿# Roadmap:
+# Roadmap (unordered):
  - [ ] When checking all passwords, add any status indicator
  - [ ] Publish a release on GitHub (including a .plgx file)
+     - Note: As of today, KeePass doesn't support compilation of plgx with newer C# versions
  - [ ] Implement any caching or an option to disable check when already known as pwned?
  - [ ] Option for ignoring expired entries
  - [ ] Check for groups
