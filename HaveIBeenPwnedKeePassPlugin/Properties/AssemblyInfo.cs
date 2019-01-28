@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Have I Been Pwned Plugin")]
 [assembly: AssemblyDescription("This KeePass Plugin provides various ways to interact with the great HIBP service from Troy Hunt")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("kapsiR")]
 [assembly: AssemblyProduct("KeePass Plugin")]
 [assembly: AssemblyCopyright("Copyright © 2019 kapsiR")]
 [assembly: AssemblyTrademark("")]
@@ -28,5 +28,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyVersion("0.2.0.0")]
+[assembly: AssemblyFileVersion("0.2.0.0")]
