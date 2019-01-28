@@ -1,17 +1,17 @@
 ﻿# Roadmap:
  - [ ] When checking all passwords, add any status indicator
  - [ ] Publish a release on GitHub (including a .plgx file)
- - [ ] Add requirements to Readme (e.g. .NET Framework version)
- - [ ] Should I remove dependency on System.ValueTuple? (target .NET 4.7.2 or remove it?)
  - [ ] Implement any caching or an option to disable check when already known as pwned?
  - [ ] Option for ignoring expired entries
  - [ ] Check for groups
 
 -----------
 # Changelog
-## 0.1.1
+## 0.2.0
  - [x] Improve handling of "has database been modified" (only indicate it if there is really any change)
+ - [x] Removed dependency on System.ValueTuple (target .NET 4.7.2)
  - [x] Publish a release on GitHub
+ - [x] Added .NET requirements to Readme 
 
 ## 0.1.0 - Initial release
 Search againgst the Pwned Passwords service of [HIBP](https://haveibeenpwned.com) with the [k-Anonymity model](https://blog.cloudflare.com/validating-leaked-passwords-with-k-anonymity/)

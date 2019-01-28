@@ -19,3 +19,6 @@ Simple KeePass plugin which uses the service [Have I Been Pwned](https://haveibe
 
 - Check the current selected entry result  
 ![checkAllPasswords](./images/pwnedEntry.jpg)
+
+#### Requirements
+ - [x] [.NET Framework 4.7.2](https://dotnet.microsoft.com/download/thank-you/net472)
