@@ -82,35 +82,63 @@ namespace HaveIBeenPwnedPlugin
             {
                 var (isBreached, breachCount) = await _hibp.CheckRangeAsync(ComputeSha1HexPartsFromEntry(pwEntry, sha1));
 
+                bool entryModified = false;
                 if (isBreached)
                 {
-                    UpdateEntryWithBreachInformation(pwEntry, breachCount);
+                    entryModified = UpdateEntryWithBreachInformation(pwEntry, breachCount);
+
                     MessageService.ShowWarning($"Oh no. This password is breached and has been seen {breachCount} times before!",
                                                $"Source: https://haveibeenpwned.com");
                 }
                 else
                 {
-                    UpdateEntryRemoveBreachInformation(pwEntry);
+                    entryModified = UpdateEntryRemoveBreachInformation(pwEntry);
                 }
 
-                UpdateUI_EntryList();
+                UpdateUI_EntryList(entryModified);
             }
         }
 
-        private void UpdateEntryRemoveBreachInformation(PwEntry pwEntry)
+        /// <summary>
+        /// Removes breach tag from entry
+        /// </summary>
+        /// <param name="pwEntry"></param>
+        /// <param name="removedPwnedTagCount"></param>
+        /// <returns><c>true</c>, if any breach tag has been removed, otherwise false</returns>
+        private bool UpdateEntryRemoveBreachInformation(PwEntry pwEntry)
         {
-            pwEntry.Tags.Remove(BreachedTag);
-            pwEntry.CustomData.Remove(BreachCountCustomDataName);
-        }
-
-        private void UpdateEntryWithBreachInformation(PwEntry pwEntry, int breachCount)
-        {
-            pwEntry.AddTag(BreachedTag);
-
-            if (breachCount > 0)
+            if (pwEntry.Tags.Contains(BreachedTag))
             {
-                pwEntry.CustomData.Set(BreachCountCustomDataName, breachCount.ToString());
+                pwEntry.Tags.Remove(BreachedTag);
+                pwEntry.CustomData.Remove(BreachCountCustomDataName);
+
+                return true;
             }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Adds breach tag to entry
+        /// </summary>
+        /// <param name="pwEntry"></param>
+        /// <param name="breachCount"></param>
+        /// <returns><c>true</c>, if breach tag has been newly added, otherwise <c>false</c></returns>
+        private bool UpdateEntryWithBreachInformation(PwEntry pwEntry, int breachCount)
+        {
+            if (!pwEntry.Tags.Contains(BreachedTag))
+            {
+                pwEntry.AddTag(BreachedTag);
+
+                if (breachCount > 0)
+                {
+                    pwEntry.CustomData.Set(BreachCountCustomDataName, breachCount.ToString());
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         public override void Terminate()
@@ -186,6 +214,8 @@ namespace HaveIBeenPwnedPlugin
 
             int checkedEntriesCount = 0;
             int pwnedEntriesCount = 0;
+            int addedPwnedTagCount = 0;
+            int removedPwnedTagCount = 0;
 
             using (SHA1Managed sha1 = new SHA1Managed())
             {
@@ -198,25 +228,40 @@ namespace HaveIBeenPwnedPlugin
 
                     if (isBreached)
                     {
-                        UpdateEntryWithBreachInformation(entry, breachCount);
+                        if (UpdateEntryWithBreachInformation(entry, breachCount))
+                        {
+                            addedPwnedTagCount++;
+                        }
                         pwnedEntriesCount++;
                     }
                     else
                     {
-                        UpdateEntryRemoveBreachInformation(entry);
+                        if (UpdateEntryRemoveBreachInformation(entry))
+                        {
+                            removedPwnedTagCount++;
+                        }
                     }
                 }
             }
 
-            UpdateUI_EntryList();
+            if (addedPwnedTagCount > 0 || removedPwnedTagCount > 0)
+            {
+                UpdateUI_EntryList(true);
+            }
+            else
+            {
+                UpdateUI_EntryList(false);
+            }
 
             MessageService.ShowInfo($"Checked entries: {checkedEntriesCount}",
-                                    $"Pwned entries: {pwnedEntriesCount}");
+                                    $"Pwned entries: {pwnedEntriesCount}",
+                                    $"New pwned entries: {addedPwnedTagCount}",
+                                    $"Entries not pwned anymore: {removedPwnedTagCount}");
         }
 
-        private void UpdateUI_EntryList()
+        private void UpdateUI_EntryList(bool setModified)
         {
-            _pluginHost.MainWindow?.UpdateUI(false, null, false, null, true, null, true);
+            _pluginHost.MainWindow?.UpdateUI(false, null, false, null, true, null, setModified);
         }
 
         private (string sha1Prefix, string sha1Suffix) ComputeSha1HexPartsFromEntry(PwEntry entry, SHA1Managed sha1Managed)
