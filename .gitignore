@@ -261,4 +261,4 @@ __pycache__/
 *.pyc
 
 # KeePass portable
-/KeePass-2.41
+/KeePass-2.*
