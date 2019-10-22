@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -15,7 +17,9 @@ namespace HaveIBeenPwnedPlugin
     {
         private IPluginHost _pluginHost = null;
         private bool _checkPasswordOnEntryTouched = true;
+        private bool _isIgnoreExpiredEntriesEnabled = true;
         private const string Option_CheckPasswordOnEntryTouched = "HaveIBeenPwnedPlugin_Option_CheckPasswordOnEntryTouched";
+        private const string Option_IgnoreExpiredEntries = "HaveIBeenPwnedPlugin_Option_IgnoreExpiredEntries";
         private const string BreachedTag = "pwned";
         private const string BreachCountCustomDataName = "pwned-count";
         private readonly HIBP _hibp;
@@ -52,10 +56,21 @@ namespace HaveIBeenPwnedPlugin
                 return false;
             }
 
-            _checkPasswordOnEntryTouched = _pluginHost.CustomConfig.GetBool(Option_CheckPasswordOnEntryTouched, true);
-            PwEntry.EntryTouched += PwEntry_TouchedAsync;
+            InitializeCustomConfigSettings();
+            InitializeEvents();
 
             return true;
+        }
+
+        private void InitializeEvents()
+        {
+            PwEntry.EntryTouched += PwEntry_TouchedAsync;
+        }
+
+        private void InitializeCustomConfigSettings()
+        {
+            _checkPasswordOnEntryTouched = _pluginHost.CustomConfig.GetBool(Option_CheckPasswordOnEntryTouched, true);
+            _isIgnoreExpiredEntriesEnabled = _pluginHost.CustomConfig.GetBool(Option_IgnoreExpiredEntries, true);
         }
 
         private async void PwEntry_TouchedAsync(object o, ObjectTouchedEventArgs e)
@@ -67,6 +82,11 @@ namespace HaveIBeenPwnedPlugin
 
             if (e.Modified && e.Object is PwEntry pwEntry)
             {
+                if (_isIgnoreExpiredEntriesEnabled && pwEntry.IsExpired())
+                {
+                    return;
+                }
+
                 await CheckHaveIBeenPwnedForEntry(pwEntry);
             }
         }
@@ -143,10 +163,21 @@ namespace HaveIBeenPwnedPlugin
 
         public override void Terminate()
         {
-            _pluginHost.CustomConfig.SetBool(Option_CheckPasswordOnEntryTouched, _checkPasswordOnEntryTouched);
-            PwEntry.EntryTouched -= PwEntry_TouchedAsync;
+            SaveCurrentCustomConfigSettings();
+            UnsubscribeEvents();
 
             _hibp.Dispose();
+        }
+
+        private void UnsubscribeEvents()
+        {
+            PwEntry.EntryTouched -= PwEntry_TouchedAsync;
+        }
+
+        private void SaveCurrentCustomConfigSettings()
+        {
+            _pluginHost.CustomConfig.SetBool(Option_CheckPasswordOnEntryTouched, _checkPasswordOnEntryTouched);
+            _pluginHost.CustomConfig.SetBool(Option_IgnoreExpiredEntries, _isIgnoreExpiredEntriesEnabled);
         }
 
         public override ToolStripMenuItem GetMenuItem(PluginMenuType t)
@@ -180,10 +211,24 @@ namespace HaveIBeenPwnedPlugin
                 Text = "Check password when entry gets modified",
                 Checked = _checkPasswordOnEntryTouched
             };
-            checkBoxMenuItem_Option_CheckPasswordOnEntryTouched.Click += CheckBoxMenuItem_Clicked;
+            checkBoxMenuItem_Option_CheckPasswordOnEntryTouched.Click += CheckBoxMenuItem_Option_CheckPasswordOnEntryTouched_Click;
             pluginRootMenuItem.DropDownItems.Add(checkBoxMenuItem_Option_CheckPasswordOnEntryTouched);
 
+            ToolStripMenuItem checkBoxMenuItem_Option_SkipExpiredEntries = new ToolStripMenuItem
+            {
+                Text = "Skip expired entries",
+                Checked = _isIgnoreExpiredEntriesEnabled
+            };
+            checkBoxMenuItem_Option_SkipExpiredEntries.Click += CheckBoxMenuItem_Option_SkipExpiredEntries_Click;
+            pluginRootMenuItem.DropDownItems.Add(checkBoxMenuItem_Option_SkipExpiredEntries);
+
             return pluginRootMenuItem;
+        }
+
+        private void CheckBoxMenuItem_Option_SkipExpiredEntries_Click(object sender, EventArgs e)
+        {
+            _isIgnoreExpiredEntriesEnabled = !_isIgnoreExpiredEntriesEnabled;
+            UIUtil.SetChecked(sender as ToolStripMenuItem, _isIgnoreExpiredEntriesEnabled);
         }
 
         private async void CheckCurrentPasswordMenuItem_ClickAsync(object sender, EventArgs e)
@@ -210,7 +255,14 @@ namespace HaveIBeenPwnedPlugin
                 return;
             }
 
-            var entries = _pluginHost.Database.RootGroup.GetEntries(true);
+            var entries = _pluginHost.Database.RootGroup.GetEntries(true) as IEnumerable<PwEntry>;
+
+            int skippedExpiredEntriesCount = 0;
+            if (_isIgnoreExpiredEntriesEnabled)
+            {
+                skippedExpiredEntriesCount = entries.Count(entry => entry.IsExpired());
+                entries = entries.Where(entry => !entry.IsExpired());
+            }
 
             int checkedEntriesCount = 0;
             int pwnedEntriesCount = 0;
@@ -256,7 +308,8 @@ namespace HaveIBeenPwnedPlugin
             MessageService.ShowInfo($"Checked entries: {checkedEntriesCount}",
                                     $"Pwned entries: {pwnedEntriesCount}",
                                     $"New pwned entries: {addedPwnedTagCount}",
-                                    $"Entries not pwned anymore: {removedPwnedTagCount}");
+                                    $"Entries not pwned anymore: {removedPwnedTagCount}",
+                                    $"Skipped expired entries: {skippedExpiredEntriesCount}");
         }
 
         private void UpdateUI_EntryList(bool setModified)
@@ -271,7 +324,7 @@ namespace HaveIBeenPwnedPlugin
             return (sha1Hex.Substring(0, 5), sha1Hex.Substring(5, sha1Hex.Length - 5));
         }
 
-        private void CheckBoxMenuItem_Clicked(object sender, EventArgs e)
+        private void CheckBoxMenuItem_Option_CheckPasswordOnEntryTouched_Click(object sender, EventArgs e)
         {
             _checkPasswordOnEntryTouched = !_checkPasswordOnEntryTouched;
             UIUtil.SetChecked(sender as ToolStripMenuItem, _checkPasswordOnEntryTouched);
