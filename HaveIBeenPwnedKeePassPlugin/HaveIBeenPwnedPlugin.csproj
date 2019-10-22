@@ -48,6 +48,7 @@
     <Compile Include="HaveIBeenPwnedPluginExt.cs" />
     <Compile Include="HIBP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PwEntryExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
