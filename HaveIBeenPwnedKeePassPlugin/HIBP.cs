@@ -25,7 +25,7 @@ namespace HaveIBeenPwnedPlugin
             {
                 isBreached = true;
 
-                int.TryParse(response.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+                int.TryParse(response.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
                     ?.FirstOrDefault(row => row.StartsWith(sha1Suffix, StringComparison.Ordinal))
                     ?.Split(new[] { ':' })?[1], out breachedCount);
             }
