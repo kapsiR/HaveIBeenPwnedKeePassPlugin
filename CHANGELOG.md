@@ -2,9 +2,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.1] - 2020-01-09
 ## Changed
+ - If there are connection problems with the HIBP API, the automatic check when changing an entry is disabled
  - Improved response handling for breach count to make it more cross-platform compatible
+
+## Fixed
+ - Added a message for connectivity issues with the HIBP API
 
 ## [0.3.0] - 2019-10-23
 ### Added
@@ -27,7 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Check HIBP Pnwed Passwords service when an entry gets modified (optional)
  - Big thanks to [Troy Hunt](https://www.troyhunt.com) and [Junade Ali](https://icyapril.com) who make this possible!
 
-[Unreleased]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/releases/tag/v0.1.0
