@@ -2,7 +2,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.1] - 2020-01-09
+## [0.3.1] - 2020-01-10
 ## Changed
  - If there are connection problems with the HIBP API, the automatic check when changing an entry is disabled
  - Improved response handling for breach count to make it more cross-platform compatible
