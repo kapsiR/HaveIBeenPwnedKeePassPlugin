@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -98,25 +99,41 @@ namespace HaveIBeenPwnedPlugin
                 throw new ArgumentNullException(nameof(pwEntry));
             }
 
-            using (SHA1Managed sha1 = new SHA1Managed())
+            try
             {
-                var (isBreached, breachCount) = await _hibp.CheckRangeAsync(ComputeSha1HexPartsFromEntry(pwEntry, sha1));
-
-                bool entryModified = false;
-                if (isBreached)
+                using (SHA1Managed sha1 = new SHA1Managed())
                 {
-                    entryModified = UpdateEntryWithBreachInformation(pwEntry, breachCount);
+                    var (isBreached, breachCount) = await _hibp.CheckRangeAsync(ComputeSha1HexPartsFromEntry(pwEntry, sha1));
 
-                    MessageService.ShowWarning($"Oh no. This password is breached and has been seen {breachCount} times before!",
-                                               $"Source: https://haveibeenpwned.com");
-                }
-                else
-                {
-                    entryModified = UpdateEntryRemoveBreachInformation(pwEntry);
-                }
+                    bool entryModified = false;
+                    if (isBreached)
+                    {
+                        entryModified = UpdateEntryWithBreachInformation(pwEntry, breachCount);
 
-                UpdateUI_EntryList(entryModified);
+                        MessageService.ShowWarning($"Oh no. This password is breached and has been seen {breachCount} times before!",
+                                                   $"Source: https://haveibeenpwned.com");
+                    }
+                    else
+                    {
+                        entryModified = UpdateEntryRemoveBreachInformation(pwEntry);
+                    }
+
+                    UpdateUI_EntryList(entryModified);
+                }
             }
+            catch (HttpRequestException)
+            {
+                SetHibpErrorState();
+            }
+        }
+
+        private void SetHibpErrorState()
+        {
+            UnsubscribeEvents();
+
+            MessageService.ShowWarning("There was a connectivity error while checking the HIBP Password Api.",
+                                       "Automatic checks, e.g. when an entry gets modified, are disabled until you restart KeePass.",
+                                       "You can still use all manual functions once connectivity is restored.");
         }
 
         /// <summary>
@@ -274,24 +291,33 @@ namespace HaveIBeenPwnedPlugin
                 foreach (var entry in entries)
                 {
                     (string sha1Prefix, string sha1Suffix) = ComputeSha1HexPartsFromEntry(entry, sha1);
-                    var (isBreached, breachCount) = await _hibp.CheckRangeAsync(sha1Prefix, sha1Suffix);
 
-                    checkedEntriesCount++;
-
-                    if (isBreached)
+                    try
                     {
-                        if (UpdateEntryWithBreachInformation(entry, breachCount))
+                        var (isBreached, breachCount) = await _hibp.CheckRangeAsync(sha1Prefix, sha1Suffix);
+
+                        checkedEntriesCount++;
+
+                        if (isBreached)
                         {
-                            addedPwnedTagCount++;
+                            if (UpdateEntryWithBreachInformation(entry, breachCount))
+                            {
+                                addedPwnedTagCount++;
+                            }
+                            pwnedEntriesCount++;
                         }
-                        pwnedEntriesCount++;
+                        else
+                        {
+                            if (UpdateEntryRemoveBreachInformation(entry))
+                            {
+                                removedPwnedTagCount++;
+                            }
+                        }
                     }
-                    else
+                    catch (HttpRequestException)
                     {
-                        if (UpdateEntryRemoveBreachInformation(entry))
-                        {
-                            removedPwnedTagCount++;
-                        }
+                        SetHibpErrorState();
+                        break;
                     }
                 }
             }
