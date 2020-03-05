@@ -288,6 +288,12 @@ namespace HaveIBeenPwnedPlugin
 
             using (SHA1Managed sha1 = new SHA1Managed())
             {
+                int entriesCount = entries.Count();
+                var statusBarLogger = _pluginHost.MainWindow.CreateStatusBarLogger();
+                string statusText = "Checking all passwords against HIBP pwned passwords... {0}/" + entriesCount;
+                statusBarLogger.StartLogging(string.Format(statusText, 0), false);
+                double progress = 1;
+
                 foreach (var entry in entries)
                 {
                     (string sha1Prefix, string sha1Suffix) = ComputeSha1HexPartsFromEntry(entry, sha1);
@@ -319,7 +325,12 @@ namespace HaveIBeenPwnedPlugin
                         SetHibpErrorState();
                         break;
                     }
+
+                    statusBarLogger.SetText(string.Format(statusText, progress), KeePassLib.Interfaces.LogStatusType.Info);
+                    statusBarLogger.SetProgress((uint)(progress++ / entriesCount * 100));
                 }
+
+                statusBarLogger.EndLogging();
             }
 
             if (addedPwnedTagCount > 0 || removedPwnedTagCount > 0)

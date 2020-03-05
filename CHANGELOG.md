@@ -2,6 +2,10 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+ - New status indicator and counts in the status bar while checking the whole database for pwned passwords
+
 ## [0.4.0] - 2020-03-05
 ### Changed
  - Enhanced privacy by supporting the new [pwned passwords padding](https://www.troyhunt.com/enhancing-pwned-passwords-privacy-with-padding/) by [Troy Hunt], [Junade Ali] and [Matt Weir]
