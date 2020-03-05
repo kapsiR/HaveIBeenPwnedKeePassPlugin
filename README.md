@@ -21,18 +21,21 @@ Simple [KeePass plugin] which uses the service [Have I Been Pwned](https://havei
 
 ## Some impressions:
 - Check all passwords in the opened database  
-![checkAllPasswords](./images/checkAllPasswords.jpg)
+![check all passwords](./images/checkAllPasswords.jpg)
+
+- Check all passwords status indicators  
+![check all passwords status bar](./images/checkAllPasswordsStatusBar.jpg)
 
 - Check all passwords result  
-![checkAllPasswords](./images/checkAllResult.jpg)
+![check all results](./images/checkAllResult.jpg)
 
 - Show all entries which are pwned  
-![checkAllPasswords](./images/showAllPwned.jpg)
+![show all pwned entries](./images/showAllPwned.jpg)
 
 - Check the current selected entry  
-![checkAllPasswords](./images/checkSingleResult.jpg)
+![check the current selected entry](./images/checkSingleResult.jpg)
 
 - Check the current selected entry result  
-![checkAllPasswords](./images/pwnedEntry.jpg)
+![check current selected result](./images/pwnedEntry.jpg)
 
 [KeePass plugin]: https://keepass.info/help/v2/plugins.html
