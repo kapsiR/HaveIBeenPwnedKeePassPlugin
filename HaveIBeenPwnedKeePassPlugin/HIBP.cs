@@ -13,6 +13,7 @@ namespace HaveIBeenPwnedPlugin
         public HIBP()
         {
             s_httpClient.DefaultRequestHeaders.Add("User-Agent", $"KeePass Plugin {nameof(HaveIBeenPwnedPlugin)}");
+            s_httpClient.DefaultRequestHeaders.Add("Add-Padding", bool.TrueString);
         }
 
         public async Task<(bool isBreached, int breachCount)> CheckRangeAsync(string sha1Prefix, string sha1Suffix)
@@ -28,6 +29,13 @@ namespace HaveIBeenPwnedPlugin
                 int.TryParse(response.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
                     ?.FirstOrDefault(row => row.StartsWith(sha1Suffix, StringComparison.Ordinal))
                     ?.Split(new[] { ':' })?[1], out breachedCount);
+
+                if (breachedCount == 0)
+                {
+                    // Padded entries always have a password count of 0 and can be discarded once received.
+                    // https://haveibeenpwned.com/API/v3#PwnedPasswordsPadding
+                    isBreached = false;
+                }
             }
 
             return (isBreached, breachedCount);
