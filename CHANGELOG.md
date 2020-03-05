@@ -7,11 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Enhanced privacy by supporting the new [pwned passwords padding](https://www.troyhunt.com/enhancing-pwned-passwords-privacy-with-padding/) by [Troy Hunt], [Junade Ali] and [Matt Weir]
 
 ## [0.3.1] - 2020-01-10
-## Changed
+### Changed
  - If there are connection problems with the HIBP API, the automatic check when changing an entry is disabled
  - Improved response handling for breach count to make it more cross-platform compatible
 
-## Fixed
+### Fixed
  - Added a message for connectivity issues with the HIBP API
 
 ## [0.3.0] - 2019-10-23
