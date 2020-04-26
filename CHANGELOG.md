@@ -3,6 +3,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.5.0] - 2020-04-26
 ### Added
  - New status indicator and counts in the status bar while checking the whole database for pwned passwords
 
@@ -39,7 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Check HIBP Pnwed Passwords service when an entry gets modified (optional)
  - Big thanks to [Troy Hunt] and [Junade Ali] who make this possible!
 
-[Unreleased]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.2.0...v0.3.0
