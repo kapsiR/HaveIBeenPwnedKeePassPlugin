@@ -11,6 +11,7 @@ Simple [KeePass plugin] which uses the service [Have I Been Pwned](https://havei
 
 #### Linux
  - [Mono 5.18](https://www.mono-project.com/docs/about-mono/releases/5.18.0/) or higher
+ - On some Linux systems, the `mono-complete` package may be required for plugins to work properly ([Details on keepass.info](https://keepass.info/help/v2/setup.html#mono))
 
 ### How to install/update
  1. Download the [latest release (.dll file) from GitHub](https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/releases)
