@@ -6,7 +6,11 @@ Simple [KeePass plugin] which uses the service [Have I Been Pwned](https://havei
 
 ## Installation and Updates
 ### Requirements
- - [.NET Framework 4.7.2](https://dotnet.microsoft.com/download/thank-you/net472)
+#### Windows
+ - [.NET Framework 4.7.2](https://dotnet.microsoft.com/download/thank-you/net472) or higher
+
+#### Linux
+ - [Mono 5.18](https://www.mono-project.com/docs/about-mono/releases/5.18.0/) or higher
 
 ### How to install/update
  1. Download the [latest release (.dll file) from GitHub](https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/releases)
