@@ -19,8 +19,10 @@ namespace HaveIBeenPwnedPlugin
         private IPluginHost _pluginHost = null;
         private bool _checkPasswordOnEntryTouched = true;
         private bool _isIgnoreExpiredEntriesEnabled = true;
+        private bool _isShowGoodNewsOnManualEntryCheckEnabled = false;
         private const string Option_CheckPasswordOnEntryTouched = "HaveIBeenPwnedPlugin_Option_CheckPasswordOnEntryTouched";
         private const string Option_IgnoreExpiredEntries = "HaveIBeenPwnedPlugin_Option_IgnoreExpiredEntries";
+        private const string Option_ShowGoodNewsOnManualEntryCheck = "HaveIBeenPwnedPlugin_Option_ShowGoodNewsOnManualEntryCheck";
         private const string BreachedTag = "pwned";
         private const string BreachCountCustomDataName = "pwned-count";
         private readonly HIBP _hibp;
@@ -72,6 +74,7 @@ namespace HaveIBeenPwnedPlugin
         {
             _checkPasswordOnEntryTouched = _pluginHost.CustomConfig.GetBool(Option_CheckPasswordOnEntryTouched, true);
             _isIgnoreExpiredEntriesEnabled = _pluginHost.CustomConfig.GetBool(Option_IgnoreExpiredEntries, true);
+            _isShowGoodNewsOnManualEntryCheckEnabled = _pluginHost.CustomConfig.GetBool(Option_ShowGoodNewsOnManualEntryCheck, false);
         }
 
         private async void PwEntry_TouchedAsync(object o, ObjectTouchedEventArgs e)
@@ -92,7 +95,7 @@ namespace HaveIBeenPwnedPlugin
             }
         }
 
-        private async Task CheckHaveIBeenPwnedForEntry(PwEntry pwEntry)
+        private async Task CheckHaveIBeenPwnedForEntry(PwEntry pwEntry, Action executesWhenEntryIsGood = null)
         {
             if (pwEntry == null)
             {
@@ -116,6 +119,7 @@ namespace HaveIBeenPwnedPlugin
                     else
                     {
                         entryModified = UpdateEntryRemoveBreachInformation(pwEntry);
+                        executesWhenEntryIsGood?.Invoke();
                     }
 
                     UpdateUI_EntryList(entryModified);
@@ -195,6 +199,7 @@ namespace HaveIBeenPwnedPlugin
         {
             _pluginHost.CustomConfig.SetBool(Option_CheckPasswordOnEntryTouched, _checkPasswordOnEntryTouched);
             _pluginHost.CustomConfig.SetBool(Option_IgnoreExpiredEntries, _isIgnoreExpiredEntriesEnabled);
+            _pluginHost.CustomConfig.SetBool(Option_ShowGoodNewsOnManualEntryCheck, _isShowGoodNewsOnManualEntryCheckEnabled);
         }
 
         public override ToolStripMenuItem GetMenuItem(PluginMenuType t)
@@ -239,7 +244,21 @@ namespace HaveIBeenPwnedPlugin
             checkBoxMenuItem_Option_SkipExpiredEntries.Click += CheckBoxMenuItem_Option_SkipExpiredEntries_Click;
             pluginRootMenuItem.DropDownItems.Add(checkBoxMenuItem_Option_SkipExpiredEntries);
 
+            ToolStripMenuItem checkBoxMenuItem_Option_ShowGoodNewsOnManualEntryCheck = new ToolStripMenuItem
+            {
+                Text = "Show good news when checking an entry manually too",
+                Checked = _isShowGoodNewsOnManualEntryCheckEnabled
+            };
+            checkBoxMenuItem_Option_ShowGoodNewsOnManualEntryCheck.Click += CheckBoxMenuItem_Option_ShowGoodNewsOnManualEntryCheck_Click;
+            pluginRootMenuItem.DropDownItems.Add(checkBoxMenuItem_Option_ShowGoodNewsOnManualEntryCheck);
+
             return pluginRootMenuItem;
+        }
+
+        private void CheckBoxMenuItem_Option_ShowGoodNewsOnManualEntryCheck_Click(object sender, EventArgs e)
+        {
+            _isShowGoodNewsOnManualEntryCheckEnabled = !_isShowGoodNewsOnManualEntryCheckEnabled;
+            UIUtil.SetChecked(sender as ToolStripMenuItem, _isShowGoodNewsOnManualEntryCheckEnabled);
         }
 
         private void CheckBoxMenuItem_Option_SkipExpiredEntries_Click(object sender, EventArgs e)
@@ -256,7 +275,14 @@ namespace HaveIBeenPwnedPlugin
 
                 if (selectedEntry != null)
                 {
-                    await CheckHaveIBeenPwnedForEntry(selectedEntry);
+                    await CheckHaveIBeenPwnedForEntry(selectedEntry, () =>
+                    {
+                        if (_isShowGoodNewsOnManualEntryCheckEnabled)
+                        {
+                            MessageService.ShowInfoEx("Good news", $"No pwnage found!",
+                                                                   $"Source: https://haveibeenpwned.com");
+                        }
+                    });
                 }
                 else
                 {
