@@ -16,13 +16,16 @@ Simple [KeePass plugin] which uses the service [Have I Been Pwned](https://havei
 ### How to install/update
  1. Download the [latest release (.dll file) from GitHub](https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/releases)
  2. In KeePass, click 'Tools' → 'Plugins' → button 'Open Folder'  
-    KeePass now opens a folder called 'Plugins'
- 3. Move the plugin file into the 'Plugins' folder
+    *KeePass now opens a folder called 'Plugins'*
+ 3. Exit KeePass to free up the lock on the plugin
+ 4. Move the plugin file into the 'Plugins' folder (replace if exists already)  
+ 5. Start KeePass again
 
 ### Uninstall 
  1. In KeePass, click 'Tools' → 'Plugins' → button 'Open Folder'  
-    KeePass now opens a folder called 'Plugins'
- 2. Delete the plugin file
+    *KeePass now opens a folder called 'Plugins'*  
+ 2. Exit KeePass to free up the lock on the plugin
+ 3. Delete the plugin file
 
 ## Some impressions:
 - Check all passwords in the opened database  
