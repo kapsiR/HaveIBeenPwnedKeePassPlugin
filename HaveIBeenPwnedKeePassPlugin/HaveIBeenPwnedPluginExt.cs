@@ -26,6 +26,7 @@ namespace HaveIBeenPwnedPlugin
         private const string BreachedTag = "pwned";
         private const string IgnorePwnedTag = "pwned-ignore";
         private const string BreachCountCustomDataName = "pwned-count";
+        private const string Message_NoEntrySelected = "No entry selected!";
         private readonly HIBP _hibp;
 
         public HaveIBeenPwnedPluginExt() => _hibp = new HIBP();
@@ -250,6 +251,18 @@ namespace HaveIBeenPwnedPlugin
 
             pluginRootMenuItem.DropDownItems.Add(new ToolStripSeparator());
 
+            if (t == PluginMenuType.Entry)
+            {
+                ToolStripMenuItem toggleCurrentPasswordIgnoreStateMenuItem = new ToolStripMenuItem
+                {
+                    Text = "Toggle ignore state"
+                };
+                toggleCurrentPasswordIgnoreStateMenuItem.Click += ToggleCurrentPasswordIgnoreStateMenuItem_Click;
+                pluginRootMenuItem.DropDownItems.Add(toggleCurrentPasswordIgnoreStateMenuItem);
+
+                pluginRootMenuItem.DropDownItems.Add(new ToolStripSeparator());
+            }
+
             ToolStripMenuItem checkBoxMenuItem_Option_CheckPasswordOnEntryTouched = new ToolStripMenuItem
             {
                 Text = "Check password when entry gets modified",
@@ -291,26 +304,59 @@ namespace HaveIBeenPwnedPlugin
 
         private async void CheckCurrentPasswordMenuItem_ClickAsync(object sender, EventArgs e)
         {
-            if (IsDatabaseOpen())
+            if (TryGetCurrentSelectedPwEntry(out PwEntry selectedEntry))
             {
-                PwEntry selectedEntry = _pluginHost.MainWindow.GetSelectedEntry(true, false);
-
-                if (selectedEntry != null)
+                await CheckHaveIBeenPwnedForEntry(selectedEntry, () =>
                 {
-                    await CheckHaveIBeenPwnedForEntry(selectedEntry, () =>
+                    if (_isShowGoodNewsOnManualEntryCheckEnabled)
                     {
-                        if (_isShowGoodNewsOnManualEntryCheckEnabled)
-                        {
-                            MessageService.ShowInfoEx("Good news", $"No pwnage found!",
-                                                                   $"Source: https://haveibeenpwned.com");
-                        }
-                    });
+                        MessageService.ShowInfoEx("Good news", $"No pwnage found!",
+                                                               $"Source: https://haveibeenpwned.com");
+                    }
+                });
+            }
+            else
+            {
+                MessageService.ShowInfo(Message_NoEntrySelected);
+            }
+        }
+
+        private void ToggleCurrentPasswordIgnoreStateMenuItem_Click(object sender, EventArgs e)
+        {
+            if (TryGetCurrentSelectedPwEntry(out PwEntry selectedEntry))
+            {
+                if (selectedEntry.HasTag(IgnorePwnedTag))
+                {
+                    selectedEntry.RemoveTag(IgnorePwnedTag);
                 }
                 else
                 {
-                    MessageService.ShowInfo("No entry selected!");
+                    selectedEntry.AddTag(IgnorePwnedTag);
+                }
+
+                UpdateUI_EntryList(true);
+            }
+            else
+            {
+                MessageService.ShowInfo(Message_NoEntrySelected);
+            }
+        }
+
+        private bool TryGetCurrentSelectedPwEntry(out PwEntry currentSelectedPwEntry)
+        {
+            currentSelectedPwEntry = null;
+
+            if (IsDatabaseOpen())
+            {
+                currentSelectedPwEntry = _pluginHost.MainWindow.GetSelectedEntry(true, false);
+
+                if (currentSelectedPwEntry != null)
+                {
+                    return true;
                 }
             }
+
+            return false;
         }
 
         private async void CheckAllPasswordsMenuItem_ClickAsync(object sender, EventArgs e)
