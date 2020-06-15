@@ -24,6 +24,7 @@ namespace HaveIBeenPwnedPlugin
         private const string Option_IgnoreExpiredEntries = "HaveIBeenPwnedPlugin_Option_IgnoreExpiredEntries";
         private const string Option_ShowGoodNewsOnManualEntryCheck = "HaveIBeenPwnedPlugin_Option_ShowGoodNewsOnManualEntryCheck";
         private const string BreachedTag = "pwned";
+        private const string IgnorePwnedTag = "pwned-ignore";
         private const string BreachCountCustomDataName = "pwned-count";
         private readonly HIBP _hibp;
 
@@ -86,13 +87,34 @@ namespace HaveIBeenPwnedPlugin
 
             if (e.Modified && e.Object is PwEntry pwEntry)
             {
-                if (_isIgnoreExpiredEntriesEnabled && pwEntry.IsExpired())
+                if (CheckEntryIgnoreConditions(pwEntry) != PwEntryIgnoreState.None)
                 {
                     return;
                 }
 
                 await CheckHaveIBeenPwnedForEntry(pwEntry);
             }
+        }
+
+        /// <summary>
+        /// Checks whether the entry should be ignored or not
+        /// Any other <c>PwEntryIgnoreState</c> than <c>PwEntryIgnoreState.None</c> will be ignored
+        /// </summary>
+        /// <param name="pwEntry">The password entry</param>
+        /// <returns>The <c>PwEntryIgnoreState</c> with the ignore reason</returns>
+        private PwEntryIgnoreState CheckEntryIgnoreConditions(PwEntry pwEntry)
+        {
+            if (_isIgnoreExpiredEntriesEnabled && pwEntry.IsExpired())
+            {
+                return PwEntryIgnoreState.IsExpired;
+            }
+
+            if (pwEntry.HasTag(IgnorePwnedTag))
+            {
+                return PwEntryIgnoreState.IsIgnored;
+            }
+
+            return PwEntryIgnoreState.None;
         }
 
         private async Task CheckHaveIBeenPwnedForEntry(PwEntry pwEntry, Action executesWhenEntryIsGood = null)
@@ -301,12 +323,7 @@ namespace HaveIBeenPwnedPlugin
             var entries = _pluginHost.Database.RootGroup.GetEntries(true) as IEnumerable<PwEntry>;
 
             int skippedExpiredEntriesCount = 0;
-            if (_isIgnoreExpiredEntriesEnabled)
-            {
-                skippedExpiredEntriesCount = entries.Count(entry => entry.IsExpired());
-                entries = entries.Where(entry => !entry.IsExpired());
-            }
-
+            int skippedIgnoredEntriesCount = 0;
             int checkedEntriesCount = 0;
             int pwnedEntriesCount = 0;
             int addedPwnedTagCount = 0;
@@ -320,15 +337,31 @@ namespace HaveIBeenPwnedPlugin
                 statusBarLogger.StartLogging(string.Format(statusText, 0), false);
                 double progress = 1;
 
-                foreach (var entry in entries)
+                foreach (PwEntry entry in entries)
                 {
+                    checkedEntriesCount++;
+
+                    var ignoreState = CheckEntryIgnoreConditions(entry);
+                    switch (ignoreState)
+                    {
+                        case PwEntryIgnoreState.IsExpired:
+                            skippedExpiredEntriesCount++;
+                            continue;
+
+                        case PwEntryIgnoreState.IsIgnored:
+                            skippedIgnoredEntriesCount++;
+                            continue;
+
+                        case PwEntryIgnoreState.None:
+                        default:
+                            break;
+                    }
+
                     (string sha1Prefix, string sha1Suffix) = ComputeSha1HexPartsFromEntry(entry, sha1);
 
                     try
                     {
                         var (isBreached, breachCount) = await _hibp.CheckRangeAsync(sha1Prefix, sha1Suffix);
-
-                        checkedEntriesCount++;
 
                         if (isBreached)
                         {
@@ -372,7 +405,8 @@ namespace HaveIBeenPwnedPlugin
                                     $"Pwned entries: {pwnedEntriesCount}",
                                     $"New pwned entries: {addedPwnedTagCount}",
                                     $"Entries not pwned anymore: {removedPwnedTagCount}",
-                                    $"Skipped expired entries: {skippedExpiredEntriesCount}");
+                                    $"Skipped expired entries: {skippedExpiredEntriesCount}",
+                                    $"Skipped ignored entries: {skippedIgnoredEntriesCount}");
         }
 
         private void UpdateUI_EntryList(bool setModified)

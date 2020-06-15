@@ -49,6 +49,7 @@
     <Compile Include="HIBP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PwEntryExtensions.cs" />
+    <Compile Include="PwEntryIgnoreState.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
