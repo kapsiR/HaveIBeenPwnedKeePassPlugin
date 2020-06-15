@@ -5,6 +5,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ## Added
  - Added a new option to enable a good news (no breach) message, when an entry is manually checked ('check current password')
+ - When a password entry has the tag 'pwned-ignore', it will be ignored on all automatic checks (Can be toggled via context menu)
 
 ## [0.5.0] - 2020-04-26
 ### Added
