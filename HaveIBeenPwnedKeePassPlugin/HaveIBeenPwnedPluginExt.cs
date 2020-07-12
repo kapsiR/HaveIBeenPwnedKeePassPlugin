@@ -31,7 +31,7 @@ namespace HaveIBeenPwnedPlugin
 
         public HaveIBeenPwnedPluginExt() => _hibp = new HIBP();
 
-        public override string UpdateUrl => "https://raw.githubusercontent.com/kapsiR/HaveIBeenPwnedKeePassPlugin/master/KeePass.version";
+        public override string UpdateUrl => "https://raw.githubusercontent.com/kapsiR/HaveIBeenPwnedKeePassPlugin/main/KeePass.version";
 
         /// <summary>
         /// Initialization of the plugin

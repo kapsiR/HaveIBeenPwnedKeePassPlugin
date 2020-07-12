@@ -3,7 +3,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-## Added
+### 
+
+## [0.6.0] - 2020-07-12
+### Added
  - Added a new option to enable a good news (no breach) message, when an entry is manually checked ('check current password')
  - When a password entry has the tag 'pwned-ignore', it will be ignored on all automatic checks (Can be toggled via context menu)
 
@@ -44,7 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Check HIBP Pnwed Passwords service when an entry gets modified (optional)
  - Big thanks to [Troy Hunt] and [Junade Ali] who make this possible!
 
-[Unreleased]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.3.0...v0.3.1
