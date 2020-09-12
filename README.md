@@ -46,4 +46,7 @@ Simple [KeePass plugin] which uses the service [Have I Been Pwned](https://havei
 - Check the current selected entry result  
 ![check current selected result](./images/pwnedEntry.jpg)
 
+- Toggle the ignore-state of a single entry  
+![toggle ignore state](./images/toggleIgnoreState.jpg)
+
 [KeePass plugin]: https://keepass.info/help/v2/plugins.html
