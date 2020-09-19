@@ -20,9 +20,11 @@ namespace HaveIBeenPwnedPlugin
         private bool _checkPasswordOnEntryTouched = true;
         private bool _isIgnoreExpiredEntriesEnabled = true;
         private bool _isShowGoodNewsOnManualEntryCheckEnabled = false;
+        private bool _isModifyPwEntryDatesEnabled = false;
         private const string Option_CheckPasswordOnEntryTouched = "HaveIBeenPwnedPlugin_Option_CheckPasswordOnEntryTouched";
         private const string Option_IgnoreExpiredEntries = "HaveIBeenPwnedPlugin_Option_IgnoreExpiredEntries";
         private const string Option_ShowGoodNewsOnManualEntryCheck = "HaveIBeenPwnedPlugin_Option_ShowGoodNewsOnManualEntryCheck";
+        private const string Option_ModifyPwEntryDates = "HaveIBeenPwnedPlugin_Option_ModifyPwEntryDates";
         private const string BreachedTag = "pwned";
         private const string IgnorePwnedTag = "pwned-ignore";
         private const string BreachCountCustomDataName = "pwned-count";
@@ -77,6 +79,7 @@ namespace HaveIBeenPwnedPlugin
             _checkPasswordOnEntryTouched = _pluginHost.CustomConfig.GetBool(Option_CheckPasswordOnEntryTouched, true);
             _isIgnoreExpiredEntriesEnabled = _pluginHost.CustomConfig.GetBool(Option_IgnoreExpiredEntries, true);
             _isShowGoodNewsOnManualEntryCheckEnabled = _pluginHost.CustomConfig.GetBool(Option_ShowGoodNewsOnManualEntryCheck, false);
+            _isModifyPwEntryDatesEnabled = _pluginHost.CustomConfig.GetBool(Option_ModifyPwEntryDates, false);
         }
 
         private async void PwEntry_TouchedAsync(object o, ObjectTouchedEventArgs e)
@@ -175,11 +178,21 @@ namespace HaveIBeenPwnedPlugin
             {
                 pwEntry.Tags.Remove(BreachedTag);
                 pwEntry.CustomData.Remove(BreachCountCustomDataName);
+                UpdatePwEntryDates(pwEntry);
 
                 return true;
             }
 
             return false;
+        }
+
+        private void UpdatePwEntryDates(PwEntry pwEntry)
+        {
+            if (_isModifyPwEntryDatesEnabled)
+            {
+                pwEntry.LastModificationTime = DateTime.Now;
+                pwEntry.LastAccessTime = DateTime.Now;
+            }
         }
 
         /// <summary>
@@ -198,6 +211,8 @@ namespace HaveIBeenPwnedPlugin
                 {
                     pwEntry.CustomData.Set(BreachCountCustomDataName, breachCount.ToString());
                 }
+
+                UpdatePwEntryDates(pwEntry);
 
                 return true;
             }
@@ -223,6 +238,7 @@ namespace HaveIBeenPwnedPlugin
             _pluginHost.CustomConfig.SetBool(Option_CheckPasswordOnEntryTouched, _checkPasswordOnEntryTouched);
             _pluginHost.CustomConfig.SetBool(Option_IgnoreExpiredEntries, _isIgnoreExpiredEntriesEnabled);
             _pluginHost.CustomConfig.SetBool(Option_ShowGoodNewsOnManualEntryCheck, _isShowGoodNewsOnManualEntryCheckEnabled);
+            _pluginHost.CustomConfig.SetBool(Option_ModifyPwEntryDates, _isModifyPwEntryDatesEnabled);
         }
 
         public override ToolStripMenuItem GetMenuItem(PluginMenuType t)
@@ -287,7 +303,21 @@ namespace HaveIBeenPwnedPlugin
             checkBoxMenuItem_Option_ShowGoodNewsOnManualEntryCheck.Click += CheckBoxMenuItem_Option_ShowGoodNewsOnManualEntryCheck_Click;
             pluginRootMenuItem.DropDownItems.Add(checkBoxMenuItem_Option_ShowGoodNewsOnManualEntryCheck);
 
+            ToolStripMenuItem checkBoxMenuItem_Option_ModifyPwEntryDates = new ToolStripMenuItem
+            {
+                Text = "Enable entry date changes when breach information is added/removed",
+                Checked = _isModifyPwEntryDatesEnabled
+            };
+            checkBoxMenuItem_Option_ModifyPwEntryDates.Click += CheckBoxMenuItem_Option_ModifyPwEntryDates_Click;
+            pluginRootMenuItem.DropDownItems.Add(checkBoxMenuItem_Option_ModifyPwEntryDates);
+
             return pluginRootMenuItem;
+        }
+
+        private void CheckBoxMenuItem_Option_ModifyPwEntryDates_Click(object sender, EventArgs e)
+        {
+            _isModifyPwEntryDatesEnabled = !_isModifyPwEntryDatesEnabled;
+            UIUtil.SetChecked(sender as ToolStripMenuItem, _isModifyPwEntryDatesEnabled);
         }
 
         private void CheckBoxMenuItem_Option_ShowGoodNewsOnManualEntryCheck_Click(object sender, EventArgs e)
