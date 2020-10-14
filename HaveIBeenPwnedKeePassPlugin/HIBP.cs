@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HaveIBeenPwnedPlugin
@@ -12,16 +13,18 @@ namespace HaveIBeenPwnedPlugin
 
         public HIBP()
         {
-            s_httpClient.DefaultRequestHeaders.Add("User-Agent", $"KeePass Plugin {nameof(HaveIBeenPwnedPlugin)}");
+            s_httpClient.DefaultRequestHeaders.Add("User-Agent", $"KeePass Plugin {nameof(HaveIBeenPwnedPlugin)} v{ThisAssembly.AssemblyFileVersion}");
             s_httpClient.DefaultRequestHeaders.Add("Add-Padding", bool.TrueString);
         }
 
-        public async Task<(bool isBreached, int breachCount)> CheckRangeAsync(string sha1Prefix, string sha1Suffix)
+        public async Task<(bool isBreached, int breachCount)> CheckRangeAsync(string sha1Prefix, string sha1Suffix, CancellationToken token = default)
         {
             bool isBreached = false;
             int breachedCount = 0;
-            var response = await s_httpClient.GetStringAsync($"{HIBP_RangeApiUrl}{sha1Prefix}");
+            HttpResponseMessage responseMessage = await s_httpClient.GetAsync($"{HIBP_RangeApiUrl}{sha1Prefix}", token).ConfigureAwait(false);
+            responseMessage.EnsureSuccessStatusCode();
 
+            string response = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
             if (response.Contains(sha1Suffix))
             {
                 isBreached = true;
@@ -41,9 +44,9 @@ namespace HaveIBeenPwnedPlugin
             return (isBreached, breachedCount);
         }
 
-        public async Task<(bool isBreached, int breachCount)> CheckRangeAsync((string sha1Prefix, string sha1Suffix) sha1Values)
+        public Task<(bool isBreached, int breachCount)> CheckRangeAsync((string sha1Prefix, string sha1Suffix) sha1Values, CancellationToken token = default)
         {
-            return await CheckRangeAsync(sha1Values.sha1Prefix, sha1Values.sha1Suffix);
+            return CheckRangeAsync(sha1Values.sha1Prefix, sha1Values.sha1Suffix, token);
         }
 
         public void Dispose()
