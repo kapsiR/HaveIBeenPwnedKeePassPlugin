@@ -4,6 +4,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+
+## [0.7.0] - 2021-03-09
+### Added
  - Added a new option to enable date changes for the password entries when any breach information gets added or removed
 
 ## [0.6.0] - 2020-07-12
@@ -48,7 +51,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Check HIBP Pnwed Passwords service when an entry gets modified (optional)
  - Big thanks to [Troy Hunt] and [Junade Ali] who make this possible!
 
-[Unreleased]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.3.1...v0.4.0
