@@ -487,7 +487,16 @@ namespace HaveIBeenPwnedPlugin
 
         private void UpdateUI_EntryList(bool setModified)
         {
-            _pluginHost.MainWindow?.UpdateUI(false, null, false, null, true, null, setModified);
+            // Quote from KeePass.Forms.MainForm.UpdateEntryList
+            // > Note that if you only made small changes (like editing an existing entry), the
+            // > RefreshEntriesList function could be a better choice, as it only
+            // > updates currently listed items and doesn't rebuild the whole list as
+            // > UpdateEntryList.
+            _pluginHost.MainWindow?.RefreshEntriesList();
+            if (setModified && IsDatabaseOpen())
+            {
+                _pluginHost.Database.Modified = true;
+            }
         }
 
         private (string sha1Prefix, string sha1Suffix) ComputeSha1HexPartsFromEntry(PwEntry entry, SHA1Managed sha1Managed)
