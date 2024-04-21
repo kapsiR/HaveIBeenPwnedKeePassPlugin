@@ -5,6 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 
+
+## [0.8.0] - 2024-04-21
+### Added
+ - Added support for TLS 1.3
+
+### Changed
+ - Improved the reproducibility of the release build
+
 ## [0.7.1] - 2021-11-04
 ### Fixed
  - The current selection could be lost if the entry list was refreshed after performing a HIBP search
@@ -55,7 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Check HIBP Pnwed Passwords service when an entry gets modified (optional)
  - Big thanks to [Troy Hunt] and [Junade Ali] who make this possible!
 
-[Unreleased]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.8.0...HEAD
+[0.7.1]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.5.0...v0.6.0
