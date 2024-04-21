@@ -53,7 +53,12 @@ namespace HaveIBeenPwnedPlugin
             {
                 // Supported protocols for HIBP are >= TLS 1.2
                 // https://haveibeenpwned.com/API/v2#HTTPS
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                // We want to enforce secure defaults, hence we don't rely on SecurityProtocolType.SystemDefault
+                // TLS 1.3 is supported since Windows Server 2022 / Windows 11, version 21H2
+                // The enum value for TLS 1.3 (0x3000) has been added in .NET Framework 4.8
+                // Since we target 4.7.2, we use it directly as value
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | (SecurityProtocolType)12288;
             }
             catch (NotSupportedException)
             {
