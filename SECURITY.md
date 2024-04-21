@@ -10,7 +10,7 @@ All accounts with write access to this repository are mandated to use two-factor
 
 ### Releases
 
-Release builds are configured to be deterministic. (Easily reproducible, since binary content is identical for the same input across compilations)
+Release builds are configured to be deterministic. (Easily reproducible, since binary content is identical for the same input across compilations)  
 The corresponding Git commit can be read from the product version of the assembly. (e.g. `0.7.1+39ecaf0b99` identifies [39ecaf0b99])  
 Integrity hashes are available on the release page. (Since 2023-01)
 
