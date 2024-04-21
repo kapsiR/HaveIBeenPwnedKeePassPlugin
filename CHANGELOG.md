@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
  - Improved the reproducibility of the release build
+ - The debug symbols of the release builds are now embedded (Embedded Portable PDB)
 
 ## [0.7.1] - 2021-11-04
 ### Fixed
