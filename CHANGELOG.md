@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.7.1] - 2021-11-04
 ### Fixed
  - The current selection could be lost if the entry list was refreshed after performing a HIBP search
- 
+
 ## [0.7.0] - 2021-03-09
 ### Added
  - Added a new option to enable date changes for the password entries when any breach information gets added or removed
@@ -65,7 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Big thanks to [Troy Hunt] and [Junade Ali] who make this possible!
 
 [Unreleased]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.8.0...HEAD
-[0.7.1]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.7.1...v0.8.0
+[0.8.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.5.0...v0.6.0
