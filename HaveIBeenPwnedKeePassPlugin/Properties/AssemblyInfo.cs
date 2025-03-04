@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("kapsiR")]
 [assembly: AssemblyProduct("KeePass Plugin")]
-[assembly: AssemblyCopyright("Copyright © 2020 kapsiR")]
+[assembly: AssemblyCopyright("Copyright © kapsiR")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
