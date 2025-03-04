@@ -5,6 +5,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 
+## [0.9.0] - 2025-03-04
+### Changed
+ - When checking for passwords, empty passwords now get skipped
 
 ## [0.8.0] - 2024-04-21
 ### Added
@@ -64,7 +67,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Check HIBP Pnwed Passwords service when an entry gets modified (optional)
  - Big thanks to [Troy Hunt] and [Junade Ali] who make this possible!
 
-[Unreleased]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/compare/v0.6.0...v0.7.0
