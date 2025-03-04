@@ -123,6 +123,11 @@ namespace HaveIBeenPwnedPlugin
                 return PwEntryIgnoreState.IsIgnored;
             }
 
+            if (pwEntry.Strings.GetSafe("Password").IsEmpty)
+            {
+                return PwEntryIgnoreState.IsEmptyPassword;
+            }
+
             return PwEntryIgnoreState.None;
         }
 
@@ -131,6 +136,12 @@ namespace HaveIBeenPwnedPlugin
             if (pwEntry == null)
             {
                 throw new ArgumentNullException(nameof(pwEntry));
+            }
+
+            // Don't check HIBP with an empty password
+            if (pwEntry.Strings.GetSafe("Password").IsEmpty)
+            {
+                return;
             }
 
             try
@@ -405,6 +416,7 @@ namespace HaveIBeenPwnedPlugin
 
             int skippedExpiredEntriesCount = 0;
             int skippedIgnoredEntriesCount = 0;
+            int skippedEmptyPasswordEntriesCount = 0;
             int checkedEntriesCount = 0;
             int pwnedEntriesCount = 0;
             int addedPwnedTagCount = 0;
@@ -431,6 +443,10 @@ namespace HaveIBeenPwnedPlugin
 
                         case PwEntryIgnoreState.IsIgnored:
                             skippedIgnoredEntriesCount++;
+                            continue;
+
+                        case PwEntryIgnoreState.IsEmptyPassword:
+                            skippedEmptyPasswordEntriesCount++;
                             continue;
 
                         case PwEntryIgnoreState.None:
@@ -487,7 +503,8 @@ namespace HaveIBeenPwnedPlugin
                                     $"New pwned entries: {addedPwnedTagCount}",
                                     $"Entries not pwned anymore: {removedPwnedTagCount}",
                                     $"Skipped expired entries: {skippedExpiredEntriesCount}",
-                                    $"Skipped ignored entries: {skippedIgnoredEntriesCount}");
+                                    $"Skipped ignored entries: {skippedIgnoredEntriesCount}",
+                                    $"Skipped entries with empty passwords: {skippedEmptyPasswordEntriesCount}");
         }
 
         private void UpdateUI_EntryList(bool setModified)

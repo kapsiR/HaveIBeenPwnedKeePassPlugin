@@ -6,6 +6,9 @@
 
         IsExpired = 1,
 
-        IsIgnored = 2
+        IsIgnored = 2,
+
+        IsEmptyPassword = 3,
+
     }
 }
