@@ -123,7 +123,7 @@ namespace HaveIBeenPwnedPlugin
                 return PwEntryIgnoreState.IsIgnored;
             }
 
-            if (pwEntry.Strings.GetSafe("Password").IsEmpty)
+            if (pwEntry.Strings.GetSafe(PwDefs.PasswordField).IsEmpty)
             {
                 return PwEntryIgnoreState.IsEmptyPassword;
             }
@@ -139,7 +139,7 @@ namespace HaveIBeenPwnedPlugin
             }
 
             // Don't check HIBP with an empty password
-            if (pwEntry.Strings.GetSafe("Password").IsEmpty)
+            if (pwEntry.Strings.GetSafe(PwDefs.PasswordField).IsEmpty)
             {
                 return;
             }
@@ -523,7 +523,7 @@ namespace HaveIBeenPwnedPlugin
 
         private (string sha1Prefix, string sha1Suffix) ComputeSha1HexPartsFromEntry(PwEntry entry, SHA1Managed sha1Managed)
         {
-            string sha1Hex = BitConverter.ToString(sha1Managed.ComputeHash(entry.Strings.GetSafe("Password").ReadUtf8())).Replace("-", string.Empty);
+            string sha1Hex = BitConverter.ToString(sha1Managed.ComputeHash(entry.Strings.GetSafe(PwDefs.PasswordField).ReadUtf8())).Replace("-", string.Empty);
 
             return (sha1Hex.Substring(0, 5), sha1Hex.Substring(5, sha1Hex.Length - 5));
         }
