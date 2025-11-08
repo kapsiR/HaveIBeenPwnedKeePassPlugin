@@ -2,6 +2,10 @@
 
 Simple [KeePass plugin] which uses the service [Have I Been Pwned](https://haveibeenpwned.com/) from [Troy Hunt](https://www.troyhunt.com)
 
+Your password never leaves KeePass! This is ensured by using a [k-Anonymity model] when searching with [Pwned Passwords].
+
+> In order to protect the value of the source password being searched for, Pwned Passwords also implements a k-Anonymity model that allows a password to be searched for by partial hash. This allows the first 5 characters of either a SHA-1 or an NTLM hash (not case-sensitive) to be passed to the API
+
 ## [Changelog](./CHANGELOG.md)
 
 ## Installation and Updates
@@ -50,3 +54,5 @@ Simple [KeePass plugin] which uses the service [Have I Been Pwned](https://havei
 ![toggle ignore state](./images/toggleIgnoreState.jpg)
 
 [KeePass plugin]: https://keepass.info/help/v2/plugins.html
+[k-Anonymity model]: https://en.wikipedia.org/wiki/K-anonymity
+[Pwned Passwords]: https://haveibeenpwned.com/API/v3#PwnedPasswords
