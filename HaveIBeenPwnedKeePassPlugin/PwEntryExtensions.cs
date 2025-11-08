@@ -14,5 +14,21 @@ namespace HaveIBeenPwnedPlugin
 
             return false;
         }
+
+        public static bool HasInheritedTag(this PwEntry pwEntry, string tag)
+        {
+            PwGroup group = pwEntry.ParentGroup;
+            while (group != null)
+            {
+                if (group.Tags.Contains(tag))
+                {
+                    return true;
+                }
+
+                group = group.ParentGroup;
+            }
+
+            return false;
+        }
     }
 }

@@ -118,7 +118,7 @@ namespace HaveIBeenPwnedPlugin
                 return PwEntryIgnoreState.IsExpired;
             }
 
-            if (pwEntry.HasTag(IgnorePwnedTag))
+            if (pwEntry.HasTag(IgnorePwnedTag) || pwEntry.HasInheritedTag(IgnorePwnedTag))
             {
                 return PwEntryIgnoreState.IsIgnored;
             }
