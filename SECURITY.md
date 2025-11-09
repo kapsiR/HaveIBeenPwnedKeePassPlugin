@@ -6,7 +6,7 @@ KeePass [has been audited and is broadly trusted].
 There is a dedicated page about [plugins and plugin security].
 This plugin is listed in the [plugin directory] of KeePass.
 
-All accounts with write access to this repository are mandated to use two-factor authentication.
+All accounts with write access to this repository are mandated to use two-factor authentication and [signed commits].
 
 ### Releases
 
@@ -33,3 +33,4 @@ For .NET Framework vulnerabilites contact the [Microsoft Security Response Cente
 [39ecaf0b99]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/commit/39ecaf0b99f4c37139af6485a1bdc4d9a2c5171d
 [KeePass.version]: https://github.com/kapsiR/HaveIBeenPwnedKeePassPlugin/blob/v0.7.1/KeePass.version
 [plugin directory]: https://keepass.info/plugins.html
+[signed commits]: https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work
